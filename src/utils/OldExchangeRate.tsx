@@ -1,13 +1,13 @@
-import { FC } from 'react';
-import { exchangeRateRes } from 'src/types/common';
-import { formatNumberWithCommas } from '..';
+import type { FC } from "react";
+import type { ExchangeRateRes } from "../api/exchangeRate";
+import { formatNumberWithCommas } from ".";
 
 interface ExchangeRateProps {
   balance: string;
   selectedCurrency: string;
   baseCurrency: string;
   rowCurrency: string;
-  exchangeRate: exchangeRateRes | undefined;
+  exchangeRate: ExchangeRateRes | undefined;
   buyRate?: number;
   conversionUnit?: number;
 }
@@ -22,7 +22,7 @@ const ExchangeRate: FC<ExchangeRateProps> = ({
   conversionUnit,
 }) => {
   // convert 140,457,123.09 -> 140457123.09
-  const parseValue = (balance: string) => parseFloat(balance.replace(/,/g, ''));
+  const parseValue = (balance: string) => parseFloat(balance.replace(/,/g, ""));
 
   const roundToTwoDecimals = (balance: number) =>
     Math.round((balance + Number.EPSILON) * 100) / 100;
@@ -75,7 +75,7 @@ const ExchangeRate: FC<ExchangeRateProps> = ({
 
   const getConvertedValue = () => {
     // If user did not change the currency, it returns balance without any conversion.
-    if (selectedCurrency === 'Default') {
+    if (selectedCurrency === "Default") {
       return balance;
     }
     // User change the currency
@@ -95,7 +95,7 @@ const ExchangeRate: FC<ExchangeRateProps> = ({
           exchangeRate?.conversionUnit
         );
       } else {
-        return 'Conversion unavailable';
+        return "Conversion unavailable";
       }
     }
     // If the selected currency equal to base currency, convert current row's currency to base currency
@@ -103,7 +103,7 @@ const ExchangeRate: FC<ExchangeRateProps> = ({
       if (buyRate !== undefined && conversionUnit !== undefined) {
         return foreignToBase(balance, buyRate, conversionUnit);
       } else {
-        return 'Conversion unavailable';
+        return "Conversion unavailable";
       }
     }
     // If the current row's currency not equal to base currency nor selected currency, convert current row's currency to base currency, then convert base currency to selected current (2 way conversion)
@@ -121,7 +121,7 @@ const ExchangeRate: FC<ExchangeRateProps> = ({
         exchangeRate.conversionUnit
       );
     } else {
-      return 'Conversion unavailable';
+      return "Conversion unavailable";
     }
   };
 
