@@ -1,12 +1,12 @@
-import AcctListing from "./page/AcctListing";
-import { getExchangeRate } from "./mock/exchangeRate";
+import { Link, Outlet } from "react-router-dom";
 
 const App = () => {
   return (
     <div className="max-w-[800px] mx-auto mt-20">
-      <AcctListing />
-
-      <pre>{JSON.stringify(getExchangeRate, null, 2)}</pre>
+      <nav>
+        <Link to="/">Account Listing</Link> | <Link to="/exchangeRate">Exchange Rate</Link>
+      </nav>
+      <Outlet />
     </div>
   );
 };
