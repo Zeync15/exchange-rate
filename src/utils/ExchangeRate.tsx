@@ -93,7 +93,7 @@ const ExchangeRate: FC<ExchangeRateProps> = ({
       return foreignToBase(balance, buyRate, conversionUnit);
     }
 
-    // If the current row's currency not equal to base currency nor selected currency, convert current row's currency to base currency, then convert base currency to selected current (2 way conversion)
+    // If the current row's currency not equal to base currency nor selected currency, convert current row's currency to base currency, then convert base currency to selected currency (2 way conversion)
     return foreignToForeign(
       balance,
       buyRate,

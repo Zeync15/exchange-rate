@@ -15,7 +15,7 @@ export const CurrencyDropList: CurrencyRes[] = [
   },
   {
     currencyCode: "USD",
-    currencyDesc: "UNITED STATES DOLLAR",
+    currencyDesc: "United States Dollar",
     countryName: "United State of America",
     decimalNo: 2,
   },
