@@ -14,3 +14,8 @@ export interface AcctListItem {
   availableBalance: string;
   provider: string;
 }
+
+export interface CompanyListItem {
+  companyName: string;
+  numberOfCompany: number;
+}

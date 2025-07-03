@@ -8,6 +8,9 @@ import ExchangeRate from "../utils/ExchangeRate";
 import { CurrencyDropList, getExchangeRate } from "../mock/exchangeRate";
 import CurrencyDropdown from "../component/CurrencyDropdown";
 import { useState } from "react";
+import Accordion from "../component/Accordion";
+import { CompanyList } from "../mock/companyList";
+import CompanyDropdown from "../component/CompanyDropdown";
 
 const AcctListing = () => {
   const [selectedCurrency, setSelectedCurrency] = useState<CurrencyRes>({
@@ -16,6 +19,8 @@ const AcctListing = () => {
     countryName: "",
     decimalNo: 0,
   });
+
+  const [selectedCompany, setSelectedCompany] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedCode = e.target.value;
@@ -74,7 +79,7 @@ const AcctListing = () => {
         return (
           <div className="flex justify-end gap-4">
             <ExchangeRate
-              balance={ledgerBalance}
+              balance={ledgerBalance ?? "-"}
               selectedCurrency={selectedCurrency.currencyCode}
               baseCurrency={"MYR"}
               rowCurrency={rowCurrency}
@@ -100,21 +105,39 @@ const AcctListing = () => {
       accessorKey: "availableBalance",
       header: () => <div className="text-right">Balance 2</div>,
       cell: ({ row }) => (
-        <div className="text-right ">{row.original.availableBalance}</div>
+        <div className="text-right ">
+          {row.original.availableBalance ?? "-"}
+        </div>
       ),
     },
   ];
 
+  const handleSelect = (selectedOption: string) => {
+    if (selectedOption === "All Companies") {
+      setSelectedCompany(null);
+    } else {
+      setSelectedCompany(selectedOption);
+    }
+  };
+
   return (
     <div className="">
+      <CompanyDropdown options={CompanyList} onSelect={handleSelect} />
+      {/* Provider: MY */}
       <div className="flex justify-end mb-5">
         <CurrencyDropdown
           selectedCurrency={selectedCurrency}
           onChange={handleChange}
         />
       </div>
-      Provider: MY
-      <Table data={AcctList.data} columns={columns} />
+      {selectedCompany === null ? (
+        <Accordion
+          CompanyList={CompanyList}
+          children={<Table data={AcctList.data} columns={columns} />}
+        />
+      ) : (
+        <Table data={AcctList.data} columns={columns} />
+      )}
     </div>
   );
 };
