@@ -3,24 +3,24 @@ import type { CompanyListItem } from "../api/acctList";
 
 interface CompanyDropdownProps {
   options: CompanyListItem[];
-  onSelect: (selectedOption: string) => void;
+  onSelect: (selectedOption: number) => void;
 }
 
 const CompanyDropdown = ({ options, onSelect }: CompanyDropdownProps) => {
   const [selectedCompany, setSelectedCompany] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState(false);
 
-  const allCompanies = [
-    "All Companies",
-    ...options.map((comp) => comp.companyName),
+  const allCompanies: CompanyListItem[] = [
+    { corpId: 0, companyName: "All Companies", numberOfCompany: 0 },
+    ...options,
   ];
 
   const toggleDropdown = () => setIsOpen(!isOpen);
 
-  const handleOptionClick = (option: string) => {
-    setSelectedCompany(option);
+  const handleOptionClick = (option: CompanyListItem) => {
+    setSelectedCompany(option.companyName);
     setIsOpen(false);
-    onSelect(option);
+    onSelect(option.corpId);
   };
 
   return (
@@ -41,7 +41,7 @@ const CompanyDropdown = ({ options, onSelect }: CompanyDropdownProps) => {
               onClick={() => handleOptionClick(comp)}
               className="p-2 hover:bg-gray-100 cursor-pointer"
             >
-              {comp}
+              {comp.companyName}
             </li>
           ))}
         </ul>

@@ -1,15 +1,20 @@
-import { useMemo, useState, type ChangeEvent } from "react";
+import { useEffect, useMemo, useState, type ChangeEvent } from "react";
 import { debounceSearch } from "../utils/debounceSearch";
 
 type SearchBarProps = {
+  searchTerm: string;
   onChange: (value: string) => void;
 };
 
-const SearchBar = ({ onChange }: SearchBarProps) => {
+const SearchBar = ({ searchTerm, onChange }: SearchBarProps) => {
   const [value, setValue] = useState("");
 
   // Create debounced function once
   const debouncedSearch = useMemo(() => debounceSearch(onChange), [onChange]);
+
+  useEffect(() => {
+    setValue(searchTerm);
+  }, [searchTerm]);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;

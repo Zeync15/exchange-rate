@@ -7,13 +7,16 @@ import CompanyDropdown from "../component/CompanyDropdown";
 import CurrencyDropdown from "../component/CurrencyDropdown";
 import SearchBar from "../component/SearchBar";
 import { Table } from "../component/Table";
-import { AcctList } from "../mock/acctList";
+import { AllAcctLists } from "../mock/acctList";
 import { CompanyList } from "../mock/companyList";
 import { CurrencyDropList, getExchangeRate } from "../mock/exchangeRate";
 import { formatAcctNumber } from "../utils";
 import ExchangeRate from "../utils/ExchangeRate";
+import { filterAccounts } from "../utils/filterAccounts";
 
 const AcctListing = () => {
+  const [selectedCompany, setSelectedCompany] = useState<number | null>(null);
+
   const [selectedCurrency, setSelectedCurrency] = useState<CurrencyRes>({
     currencyCode: "",
     currencyDesc: "",
@@ -21,11 +24,25 @@ const AcctListing = () => {
     decimalNo: 0,
   });
 
-  const [selectedCompany, setSelectedCompany] = useState<string | null>(null);
+  const [selectedCorpId, setSelectedCorpId] = useState<number | null>(null);
 
   const [tableData, setTableData] = useState<AcctListItem[]>([]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleCompanyChange = (selectedOption: number) => {
+    if (selectedOption === 0) {
+      setSelectedCompany(null);
+    } else {
+      setSelectedCompany(selectedOption);
+    }
+  };
+
+  const handleSearch = (searchTerm: string) => {
+    setSearchTerm(searchTerm);
+  };
+
+  const handleCurrencyChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedCode = e.target.value;
 
     const selected = CurrencyDropList.find(
@@ -44,8 +61,9 @@ const AcctListing = () => {
     }
   };
 
-  const hasSelectedCurrency =
-    selectedCurrency.currencyCode !== "" && selectedCurrency.currencyCode;
+  const handleCorpIdChange = (corpId: number | null) => {
+    setSelectedCorpId(corpId);
+  };
 
   const columns: ColumnDef<AcctListItem>[] = [
     {
@@ -99,7 +117,8 @@ const AcctListing = () => {
               buyRate={buyRate!}
               conversionUnit={conversionUnit!}
             />
-            {hasSelectedCurrency}
+
+            {selectedCurrency.currencyCode}
           </div>
         );
       },
@@ -115,44 +134,39 @@ const AcctListing = () => {
     },
   ];
 
-  const handleSelect = (selectedOption: string) => {
-    if (selectedOption === "All Companies") {
-      setSelectedCompany(null);
-    } else {
-      setSelectedCompany(selectedOption);
+  useEffect(() => {
+    if (selectedCorpId) {
+      setTableData(
+        filterAccounts(AllAcctLists[selectedCorpId].data, searchTerm)
+      );
     }
-  };
+  }, [selectedCorpId, searchTerm]);
 
   useEffect(() => {
-    // Initialize with full data on component mount
-    setTableData(AcctList.data);
-  }, []);
-
-  const handleSearch = (searchTerm: string) => {
-    setTableData(
-      searchTerm.length === 0
-        ? AcctList.data
-        : AcctList.data.filter((d) =>
-            d.acctName.toLowerCase().includes(searchTerm.toLowerCase())
-          )
-    );
-  };
+    if (selectedCompany) {
+      setTableData(
+        filterAccounts(AllAcctLists[selectedCompany].data, searchTerm)
+      );
+    }
+  }, [selectedCompany, searchTerm]);
 
   return (
     <div className="">
-      <CompanyDropdown options={CompanyList} onSelect={handleSelect} />
+      <CompanyDropdown options={CompanyList} onSelect={handleCompanyChange} />
 
       <div className="flex justify-between mb-5">
-        <SearchBar onChange={handleSearch} />
+        <SearchBar searchTerm={searchTerm} onChange={handleSearch} />
         <CurrencyDropdown
           selectedCurrency={selectedCurrency}
-          onChange={handleChange}
+          onChange={handleCurrencyChange}
         />
       </div>
 
       {selectedCompany === null ? (
         <Accordion
-          CompanyList={CompanyList}
+          companyList={CompanyList}
+          corpId={selectedCorpId}
+          onCorpIdChange={handleCorpIdChange}
           children={<Table data={tableData} columns={columns} />}
         />
       ) : (

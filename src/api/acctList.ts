@@ -3,6 +3,7 @@ export interface AcctListRes {
   currentPage: number;
   nextPage: number;
   totalRecordCount: number;
+  corpId: number
   data: AcctListItem[];
 }
 
@@ -16,6 +17,7 @@ export interface AcctListItem {
 }
 
 export interface CompanyListItem {
+  corpId: number;
   companyName: string;
   numberOfCompany: number;
 }
