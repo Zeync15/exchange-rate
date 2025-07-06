@@ -28,7 +28,7 @@ export const Table = <TData,>({ data, columns }: TableProps<TData>) => {
   });
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-gray-300">
+    <div className="overflow-auto rounded-2xl border border-gray-300">
       <table className="w-full">
         <thead className="bg-gray-100">
           {table.getHeaderGroups().map((headerGroup) => (

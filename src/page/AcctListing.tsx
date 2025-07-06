@@ -1,16 +1,17 @@
-import type { AcctListItem } from "../api/acctList";
-import { AcctList } from "../mock/acctList";
-import { formatAcctNumber } from "../utils";
 import type { ColumnDef } from "@tanstack/react-table";
-import { Table } from "../component/Table";
+import { useEffect, useState } from "react";
+import type { AcctListItem } from "../api/acctList";
 import type { CurrencyRes } from "../api/exchangeRate";
-import ExchangeRate from "../utils/ExchangeRate";
-import { CurrencyDropList, getExchangeRate } from "../mock/exchangeRate";
-import CurrencyDropdown from "../component/CurrencyDropdown";
-import { useState } from "react";
 import Accordion from "../component/Accordion";
-import { CompanyList } from "../mock/companyList";
 import CompanyDropdown from "../component/CompanyDropdown";
+import CurrencyDropdown from "../component/CurrencyDropdown";
+import SearchBar from "../component/SearchBar";
+import { Table } from "../component/Table";
+import { AcctList } from "../mock/acctList";
+import { CompanyList } from "../mock/companyList";
+import { CurrencyDropList, getExchangeRate } from "../mock/exchangeRate";
+import { formatAcctNumber } from "../utils";
+import ExchangeRate from "../utils/ExchangeRate";
 
 const AcctListing = () => {
   const [selectedCurrency, setSelectedCurrency] = useState<CurrencyRes>({
@@ -21,6 +22,8 @@ const AcctListing = () => {
   });
 
   const [selectedCompany, setSelectedCompany] = useState<string | null>(null);
+
+  const [tableData, setTableData] = useState<AcctListItem[]>([]);
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedCode = e.target.value;
@@ -120,23 +123,40 @@ const AcctListing = () => {
     }
   };
 
+  useEffect(() => {
+    // Initialize with full data on component mount
+    setTableData(AcctList.data);
+  }, []);
+
+  const handleSearch = (searchTerm: string) => {
+    setTableData(
+      searchTerm.length === 0
+        ? AcctList.data
+        : AcctList.data.filter((d) =>
+            d.acctName.toLowerCase().includes(searchTerm.toLowerCase())
+          )
+    );
+  };
+
   return (
     <div className="">
       <CompanyDropdown options={CompanyList} onSelect={handleSelect} />
-      {/* Provider: MY */}
-      <div className="flex justify-end mb-5">
+
+      <div className="flex justify-between mb-5">
+        <SearchBar onChange={handleSearch} />
         <CurrencyDropdown
           selectedCurrency={selectedCurrency}
           onChange={handleChange}
         />
       </div>
+
       {selectedCompany === null ? (
         <Accordion
           CompanyList={CompanyList}
-          children={<Table data={AcctList.data} columns={columns} />}
+          children={<Table data={tableData} columns={columns} />}
         />
       ) : (
-        <Table data={AcctList.data} columns={columns} />
+        <Table data={tableData} columns={columns} />
       )}
     </div>
   );

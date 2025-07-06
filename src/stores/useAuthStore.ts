@@ -17,8 +17,8 @@ type AuthState = {
 let inactivityTimer: number;
 let forceLogoutTimer: number;
 
-const INACTIVITY_TIME = 5 * 1000; // 5 minutes
-const FORCE_LOGOUT_TIME = 15 * 1000; // 15 minutes
+const INACTIVITY_TIME = 5 * 60 * 1000; // 5 minutes
+const FORCE_LOGOUT_TIME = 15 * 60 * 1000; // 15 minutes
 
 export const useAuthStore = create<AuthState>((set) => ({
   user: null,
