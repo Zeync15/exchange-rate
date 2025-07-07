@@ -1,9 +1,10 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import "./index.css";
-import App from "./App.tsx";
 import { createBrowserRouter, RouterProvider } from "react-router";
+import App from "./App.tsx";
+import "./index.css";
 import AcctListing from "./page/AcctListing.tsx";
+import Company from "./page/Company.tsx";
 import ExchangeRate from "./page/ExchangeRate.tsx";
 
 const router = createBrowserRouter([
@@ -13,6 +14,7 @@ const router = createBrowserRouter([
     children: [
       { path: "/", element: <AcctListing /> },
       { path: "/exchangeRate", element: <ExchangeRate /> },
+      { path: "/company", element: <Company /> },
     ],
   },
 ]);

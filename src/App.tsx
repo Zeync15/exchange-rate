@@ -1,8 +1,8 @@
 import { Link, Outlet } from "react-router-dom";
 import LoginForm from "./component/LoginForm";
 import LogoutButton from "./component/LogoutButton";
-import LogoutListener from "./utils/LogoutListener";
 import { useAuthStore } from "./stores/useAuthStore";
+import LogoutListener from "./utils/LogoutListener";
 
 const App = () => {
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
@@ -19,7 +19,8 @@ const App = () => {
         <>
           <nav>
             <Link to="/">Account Listing</Link> |{" "}
-            <Link to="/exchangeRate">Exchange Rate</Link>
+            <Link to="/exchangeRate">Exchange Rate</Link> |{" "}
+            <Link to="/company">Company</Link>
           </nav>
           <Outlet />
         </>
