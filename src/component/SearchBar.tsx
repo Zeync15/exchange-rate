@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, type ChangeEvent } from "react";
-import { debounceSearch } from "../utils/debounceSearch";
+import { debounceSearch } from "../utils";
 
 type SearchBarProps = {
   searchTerm: string;

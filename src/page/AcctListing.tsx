@@ -10,9 +10,8 @@ import { Table } from "../component/Table";
 import { AllAcctLists } from "../mock/acctList";
 import { CompanyList } from "../mock/companyList";
 import { CurrencyDropList, getExchangeRate } from "../mock/exchangeRate";
-import { formatAcctNumber } from "../utils";
+import { filterAccounts, formatAcctNumber } from "../utils";
 import ExchangeRate from "../utils/ExchangeRate";
-import { filterAccounts } from "../utils/filterAccounts";
 
 const AcctListing = () => {
   const [selectedCompany, setSelectedCompany] = useState<number | null>(null);
